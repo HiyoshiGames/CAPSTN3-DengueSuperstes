@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private bool isFacingRight = true;
     [SerializeField] private Vector2 movement;
     [SerializeField] private Rigidbody2D rb;
-
+    [SerializeField] private float movementSpeed; // Movement speed multiplier
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -20,20 +20,17 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        movement.x = Input.GetAxisRaw("Horizontal");
-        movement.y = Input.GetAxisRaw("Vertical");
+        // Multiply movementSpeed to Raw Value
+        movement.x = Input.GetAxisRaw("Horizontal") * movementSpeed;
+        movement.y = Input.GetAxisRaw("Vertical") * movementSpeed;
     }
 
     private void FixedUpdate()
     {
-        // Changed Player Movement to Force
-        //rb.MovePosition(rb.position + movement * (currentSpeed * Time.fixedDeltaTime));
-       
         // Player Movement is now through force; experimenting...
-        Vector2 movement = new Vector2(this.movement.x, this.movement.y).normalized;
-        rb.AddForce(movement * currentSpeed);
-
-        //Debug.Log(rb.velocity.normalized);
+        // Removed normalize
+        Vector2 movement = new Vector2(this.movement.x, this.movement.y);
+        rb.velocity = movement;
         
         if (movement.x > 0 && !isFacingRight)
         {
