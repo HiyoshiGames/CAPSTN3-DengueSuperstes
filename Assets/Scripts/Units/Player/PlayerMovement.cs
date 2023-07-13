@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Vector2 movement;
     [SerializeField] private Rigidbody2D rb;
 
+    [SerializeField] private float movementSpeed; // Value for the player's movement speed;
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -20,21 +21,19 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        movement.x = Input.GetAxisRaw("Horizontal");
-        movement.y = Input.GetAxisRaw("Vertical");
+        // Movement speed acts as a multiplier for Movement Vector values
+        movement.x = Input.GetAxisRaw("Horizontal") * movementSpeed;
+        movement.y = Input.GetAxisRaw("Vertical") * movementSpeed;
     }
 
+    // Updated the player movement implementation for a tighter feel
     private void FixedUpdate()
     {
-        // Changed Player Movement to Force
-        //rb.MovePosition(rb.position + movement * (currentSpeed * Time.fixedDeltaTime));
-       
         // Player Movement is now through force; experimenting...
-        Vector2 movement = new Vector2(this.movement.x, this.movement.y).normalized;
-        rb.AddForce(movement * currentSpeed);
+        // No longer normalizes the Vector2
+        Vector2 movement = new Vector2(this.movement.x, this.movement.y);
+        rb.velocity = movement; // Used velocity instead of add force for more consistency
 
-        //Debug.Log(rb.velocity.normalized);
-        
         if (movement.x > 0 && !isFacingRight)
         {
             Flip();
